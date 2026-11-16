@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import React from "react";
+import type { FC } from "react";
 import { useForm } from "react-hook-form";
 import { articleSchema } from "../services/validation/article.validation";
 import { ArticleInputField } from "../services/json/input-fileds/article.inputs";
@@ -18,8 +18,8 @@ type NewsDialogprops = {
   open: boolean;
   onClose: () => void;
 };
-const NewsDialog: React.FC<NewsDialogprops> = ({ open, onClose }) => {
-    const {register, formState: {errors}, handleSubmit, reset, setValue} = useForm<ArticlePaylod>({
+const NewsDialog: FC<NewsDialogprops> = ({ open, onClose }) => {
+    const {register, formState: {errors}, handleSubmit, reset} = useForm<ArticlePaylod>({
         resolver: yupResolver(articleSchema)
     })
 

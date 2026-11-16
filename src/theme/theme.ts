@@ -79,11 +79,9 @@ const theme = createTheme({
         root: {
           borderRadius: 10,
           padding: "10px 20px",
-        },
-        containedPrimary: {
-          boxShadow: "none",
-          "&:hover": {
+          "&.MuiButton-containedPrimary": {
             boxShadow: "none",
+            "&:hover": { boxShadow: "none" },
           },
         },
       },

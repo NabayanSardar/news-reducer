@@ -1,7 +1,5 @@
 import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import { LogOut, User } from 'lucide-react';
-import React from 'react'
-
 const Navbar = () => {
   return (
   <Box sx={{ flexGrow: 1 }}>

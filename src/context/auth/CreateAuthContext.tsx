@@ -1,6 +1,6 @@
 import { createContext } from "react";
-import type { AuthContext } from "../../types/interface/auth.interface";
+import type { AuthContext as AuthContextType } from "../../types/interface/auth.interface";
 
-const AuthContext = createContext<AuthContext | null>(null);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export default AuthContext;

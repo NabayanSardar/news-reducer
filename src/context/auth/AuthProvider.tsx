@@ -1,4 +1,4 @@
-import React, { useReducer, type ReactNode } from "react";
+import { useReducer, type ReactNode } from "react";
 import AuthContext from "./CreateAuthContext";
 import { AuthInitialState, authReducer } from "../../reducer/auth.reducer";
 import type {
@@ -8,6 +8,7 @@ import type {
 import API from "../../api/api.instance";
 import { Endpoint } from "../../services/helper/endpoint";
 import Cookies from "js-cookie";
+import { getErrorMessage } from "../../services/helper/getErrorMessage";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [authstate, dispatchAuthState] = useReducer(
@@ -23,10 +24,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log("response", response);
       dispatchAuthState({ type: "COMPLETE_REGISTER", payload: response.data });
       return response.data;
-    } catch (error: any) {
-      // console.log("error",error.response);
-      const errMessage: string =
-        error?.response?.data?.message || "Failed Register";
+    } catch (error: unknown) {
+      const errMessage = getErrorMessage(error, "Failed Register");
       console.log("error---", errMessage);
       dispatchAuthState({ type: "FAILD_REGISTER", payload: errMessage });
       return errMessage;
@@ -43,10 +42,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       dispatchAuthState({ type: "COMPLETE_LOGIN", payload: response.data });
       return response.data;
-    } catch (error: any) {
-      // console.log("error",error.response);
-      const errMessage: string =
-        error?.response?.data?.message || "Login Failed";
+    } catch (error: unknown) {
+      const errMessage = getErrorMessage(error, "Login Failed");
       dispatchAuthState({ type: "FAILD_LOGIN", payload: errMessage });
       return errMessage;
     }

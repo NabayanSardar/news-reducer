@@ -61,15 +61,20 @@ export const categoryReducer = (
       };
 
     case "COMPLETE_UPDATING":
-
-    case "COMPLETE_DELETING":
-      const newCategoryList = state.categories.filter(
-        (category) => category._id !== action.payload,
-      );
       return {
         ...state,
-        isLoading: false,
-        categories: newCategoryList,
+        isAllLoading: false,
+        categories: state.categories.map((category) =>
+          category._id === action.payload._id ? action.payload : category,
+        ),
+      };
+    case "COMPLETE_DELETING":
+      return {
+        ...state,
+        isAllLoading: false,
+        categories: state.categories.filter(
+          (category) => category._id !== action.payload,
+        ),
       };
 
     case "FAILD_ADDING":

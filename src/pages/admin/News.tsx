@@ -24,7 +24,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import NewsDialog from "../../components/NewsDialog";
 import type { ArticlePaylod, News } from "../../types/interface/news.interface";
 import { toast } from "sonner";
 import API from "../../api/api.instance";
@@ -35,14 +34,13 @@ import DynamicInput from "../../components/DynamicInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { articleSchema } from "../../services/validation/article.validation";
 import { Controller, useForm } from "react-hook-form";
+import { getErrorMessage } from "../../services/helper/getErrorMessage";
 
 const News = () => {
   const [openAddNewsDialog, setOpenAddNewsDialog] = useState(false);
   const [isLoading, setIsloading] = useState<boolean>(false);
   const [isError, setIsError] = useState<string | null>(null);
   const [newsList, setNewsList] = useState<News[]>([]);
-  const [isCategoryLoading, setIsCategoryloading] = useState<boolean>(false);
-  const [isCategoryError, setIsCategoryError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [newpagination, setNewspagination] = useState({
     page: 1,
@@ -52,7 +50,6 @@ const News = () => {
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
    const [isAddLoading, setIsAddloading] = useState<boolean>(false);
-  const [isAddError, setIsAddError] = useState<string | null>(null);
 
   const {
     register,
@@ -89,9 +86,8 @@ const News = () => {
       setOpenAddNewsDialog(false)
     }
    } catch (error) {
-        const errMessage: string = error?.response?.data?.message;
+        const errMessage = getErrorMessage(error, "Failed to add article");
         toast.error(errMessage);
-        setIsAddError(errMessage);
       } finally {
         setIsAddloading(false);
       }
@@ -118,7 +114,7 @@ const News = () => {
           totalResults: response.data.pagination.totalResults,
         }));
       } catch (error) {
-        const errMessage: string = error?.response?.data?.message;
+        const errMessage = getErrorMessage(error, "Failed to load news");
         toast.error(errMessage);
         setIsError(errMessage);
       } finally {
@@ -131,17 +127,13 @@ const News = () => {
   //to get category list
   useEffect(() => {
     const fetchCategoryData = async () => {
-      setIsCategoryloading(true);
       try {
         const response = await API.get(`${Endpoint.admin.category.global}`);
         // console.log("response categories", response);
         setCategories(response.data.data);
       } catch (error) {
-        const errMessage: string = error?.response?.data?.message;
+        const errMessage = getErrorMessage(error, "Failed to load categories");
         toast.error(errMessage);
-        setIsCategoryError(errMessage);
-      } finally {
-        setIsCategoryloading(false);
       }
     };
     fetchCategoryData();
@@ -207,7 +199,7 @@ const News = () => {
                 render={({ field }) => (
                   <Select value={field.value} onChange={field.onChange}>
                     {categories?.map((category) => (
-                      <MenuItem value={category._id}>{category.name}</MenuItem>
+                      <MenuItem key={category._id} value={category._id}>{category.name}</MenuItem>
                     ))}
                   </Select>
                 )}
@@ -245,9 +237,11 @@ const News = () => {
                   type="file"
                   hidden
                   onChange={(e) => {
-                    const file = e?.target?.files?.[0] as File;
-                    setImagePreview(URL.createObjectURL(file));
-                    setValue("image", file);
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setImagePreview(URL.createObjectURL(file));
+                      setValue("image", file);
+                    }
                   }}
                 />
               </Button>
@@ -262,18 +256,15 @@ const News = () => {
               <Button
                 type="submit"
                 variant="contained"
+                disabled={isAddLoading}
                 sx={{ bgcolor: "green" }}
               >
-                Add
+                {isAddLoading ? <CircularProgress size={20} /> : "Add"}
               </Button>
             </DialogActions>
           </Box>
         </DialogContent>
       </Dialog>
-      {/* <NewsDialog
-        open={openAddNewsDialog}
-        onClose={() => setOpenAddNewsDialog(false)}
-      /> */}
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2, p: 2 }}>
           {isError ? (
@@ -340,7 +331,7 @@ const News = () => {
                 onChange={(e) =>
                   setNewspagination((prev) => ({
                     ...prev,
-                    limit: e.target.value,
+                    limit: Number(e.target.value),
                   }))
                 }
               >

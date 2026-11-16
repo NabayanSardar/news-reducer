@@ -31,7 +31,7 @@ export interface AuthState {
 }
 export interface AuthContext {
    authstate:AuthState;
-    loginUser: (payload: LoginPayload) => Promise<LoginResponse>;
-    registerUser: (payload: SignupPayload)=>Promise<SingupResponse>;
+    loginUser: (payload: LoginPayload) => Promise<LoginResponse | string>;
+    registerUser: (payload: SignupPayload)=>Promise<SingupResponse | string>;
     logoutUser: ()=>void;
 }

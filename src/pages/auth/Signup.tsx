@@ -43,7 +43,7 @@ const Signup = () => {
     // console.log("data", data);
    const response = await authContext.registerUser(data);
    console.log("response in singup page", response);
-   if(response.user){
+   if(typeof response !== "string" && response.user){
     toast.success(response.message);
     navigate("/login");
     reset();

@@ -32,10 +32,11 @@ API.interceptors.response.use(
   (error) => {
     // return Promise.reject(error);
     console.log("Axios interceptor error", error.response);
-    toast.error(error.response.data.message)
-    if (error.response && error.response.status === 401) {
+    toast.error(error.response?.data?.message ?? "A network error occurred");
+    if (error.response?.status === 401) {
       forceLogout();
     }
+    return Promise.reject(error);
   }
 );
 

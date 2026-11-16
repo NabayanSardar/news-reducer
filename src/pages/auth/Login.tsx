@@ -41,7 +41,7 @@ const Login = () => {
   const onSubmit = async (data: LoginPayload) => {
     const response = await authContext.loginUser(data);
     console.log("response in login page", response);
-    if (response.user) {
+    if (typeof response !== "string" && response.user) {
       toast.success(response.message);
       if (response.user.role === "admin") {
         navigate("/admin/dashbaord");

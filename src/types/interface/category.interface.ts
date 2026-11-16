@@ -22,6 +22,6 @@ export interface CategoryContextType {
   handleDailogOpen: () => void;
   closeDailog: () => void;
   createCategory: (data: CategoryPayload) => Promise<any>;
-  updateCategory: (data: CategoryPayload) => Promise<any>;
+  updateCategory: (id: string, data: CategoryPayload) => Promise<any>;
   deleCategory: (id: string) => Promise<any>;
 }
