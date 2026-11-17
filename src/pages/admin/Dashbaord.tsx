@@ -6,4 +6,3 @@ const Dashbaord = () => {
 
 export default Dashbaord
 
-//dash bord
